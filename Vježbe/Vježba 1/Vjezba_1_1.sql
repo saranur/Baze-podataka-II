@@ -5,7 +5,7 @@ USE baza1 --koristimo bazu
 CREATE TABLE Studenti
 (
 brojIndeksa NVARCHAR(10),
- /*kako stavimo samo NVARCHAR to ce znaciti da ce biti samo jedan karakter, u zagrade mozemo dodati velicinu ()*/
+ /*kada stavimo samo NVARCHAR to ce znaciti da ce biti samo jedan karakter, u zagrade mozemo dodati velicinu ()*/
  ime NVARCHAR(10),-- NOT NULL -ako zelimo da nije nullable
  prezime NVARCHAR(10) 
  /*sva ova polja su trenutno NULLABLE, ako ne zelimo da budu onda dodamo NOT NULL */
@@ -41,3 +41,4 @@ Naziv NVARCHAR(50)
 --Povezivanje tabela
 ALTER TABLE Studenti
 ADD FakultetID INT NOT NULL CONSTRAINT FK_Student_Fakultet FOREIGN KEY REFERENCES Fakulteti(FakultetID)
+--Konvencija imenovanja: FK_NazivTabelaUKOjuPrelazi_NazivTabeleIzKojePrelazi 
