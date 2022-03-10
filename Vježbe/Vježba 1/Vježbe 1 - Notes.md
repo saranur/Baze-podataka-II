@@ -27,7 +27,7 @@
 
 <hr>
 
-| Exact Numbers | Appropriate numeric | Date/Time      | Characters | Unicode Characters | BInary    | Others           |
+| Exact Numbers | Appropriate numeric | Date/Time      | Characters | Unicode Characters | Binary    | Others           |
 | :------------ | ------------------- | -------------- | ---------- | ------------------ | --------- | ---------------- |
 | Bit           | Real                | Date           | Char       | Nchar              | Binary    | Cursor           |
 | Tinyint       | Float               | Datetime       | Varchar    | Nvarchar           | Image     | Hierarchyid      |
