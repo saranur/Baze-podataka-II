@@ -9,10 +9,11 @@ _[Pubs](https://raw.githubusercontent.com/saranur/Baze-podataka-II/main/Materija
 <details>
   <summary>Vježbe</summary><br>
 
-  Vježbe 1 ~ [Zadatak1](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vjezba_1_1.sql) ~ [Zadatak 2 Postavka](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vje%C5%BEba_1_Postavka.pdf) ~ [Zadatak 2 Rješenje](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vjezba_1_Z2.sql) ~ [Notes](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vje%C5%BEbe%201%20-%20Notes.md)
+  [Vježba 1](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vjezba_1_1.sql) ~ [Zadatak 2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vjezba_1_Z2.sql) ~ [Zadatak 2 Postavka](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vje%C5%BEba_1_Postavka.pdf) ~ [Notes](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%201/Vje%C5%BEbe%201%20-%20Notes.md)
   
- Vježbe 2 ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vje%C5%BEba%202.docx) ~ [Vježba2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vjezba2.sql) ~ [Zadaci Za Vježbu 2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/ZadaciZaVjezbu2.sql)
+  [Vježba2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vjezba2.sql) ~ [Zadaci Za Vježbu 2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/ZadaciZaVjezbu2.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vje%C5%BEba%202.docx) 
   
+  [Vježbe 3](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vjezba3.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vje%C5%BEba%203.docx?raw=true) 
   
 </details>
 <hr>
