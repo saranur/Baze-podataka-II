@@ -13,14 +13,14 @@ _[Pubs](https://raw.githubusercontent.com/saranur/Baze-podataka-II/main/Materija
   
   [Vježba 2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vjezba2.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%202/Vje%C5%BEba%202.docx) ~ [Zadaci Za Vježbu 2](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%202/ZadaciZaVjezbu2.sql)
   
-  [Vježbe 3](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vjezba3.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vje%C5%BEba%203.docx?raw=true) 
+  [Vježbe 3](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vjezba_3.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%203/Vje%C5%BEba%203.docx?raw=true) 
   
   
   [Vježbe 4](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%204/Vjezba4.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%204/Vje%C5%BEba%204.docx)
   
-  [Vježbe 5](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%205/Vjezba5.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%205/Vje%C5%BEba%205.docx)
+  [Vježbe 5](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEba%205/Vjezba_5.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEba%205/Vje%C5%BEba%205.docx)
   
-  [Vježbe 6]() ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba%206.docx)
+  [Vježbe 6](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba_6.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba%206.docx) [Baza Test](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba_6_baza_Test.sql)
   
   [Vježbe 7]() ~ [Postavka]()
   
