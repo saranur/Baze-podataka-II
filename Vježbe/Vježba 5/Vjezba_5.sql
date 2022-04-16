@@ -92,8 +92,8 @@ HAVING SUM(O.Freight)>4000
 --(prebrojati) samo one proizvode čiji naziv počinje slovom 'S'. (AdventureWorks2017)
 
 USE AdventureWorks2019
-SELECT P.ProductModelID,COUNT(*) AS 'Ukupan broj'
-FROM Production.Product AS P
-WHERE P.ProductModelID IS NOT NULL AND P.Name LIKE 'S%'
-GROUP BY P.ProductModelID
+SELECT PP.ProductModelID,COUNT(*) AS 'Ukupan broj'
+FROM Production.Product AS PP
+WHERE PP.ProductModelID IS NOT NULL AND PP.Name LIKE 'S%'
+GROUP BY PP.ProductModelID
 HAVING COUNT(*)>3

@@ -124,10 +124,10 @@ ORDER BY 3 DESC  --3 jer je qty na trecem mjestu u selectu
 --Listu sortirati abecedno po tipu djela i po cijeni opadajućim redoslijedom. Sa liste eliminisati one vrijednosti koje u polju cijena imaju nepoznatu vrijednost.
 --Modifikovati upit tako da prikaže cijenu umanjenu za 20 %. Naziv kolone treba da se zove „Cijena umanjena za 20%“.
 USE pubs
-SELECT T.title, T.type, T.price-T.price*0.2 AS 'Cijena umanjena za 20%' , T.price*0.2 AS '20% od cijene'
+SELECT T.title,T.type,T.price,T.price*0.2 '20% od cijene', T.price*(1-0.2)'Cijena umanjena za 20%'
 FROM titles AS T
 WHERE T.price IS NOT NULL
-ORDER BY 3 DESC 
+ORDER BY 2,3
 
 --20.	Prikazati 10 količinski najvećih stavki prodaje. Lista treba da sadrži broj narudžbe, datum narudžbe i količinu.
 --Provjeriti da li ima više stavki sa količinom kao posljednja u listi
