@@ -1,5 +1,9 @@
 ﻿--1. Prikazati tip popusta, naziv prodavnice i njen id. (Pubs)
-
+USE pubs
+SELECT D.discounttype,S.stor_name,S.stor_id
+FROM stores AS S
+INNER JOIN discounts AS D
+ON S.stor_id=D.stor_id
 --2. Prikazati ime uposlenika, njegov id, te naziv posla koji obavlja. (Pubs)
 USE pubs
 SELECT E.fname, E.emp_id, J.job_desc
@@ -76,12 +80,6 @@ FROM Orders AS O
 
 SELECT C.CustomerID
 FROM Customers AS C
-INTERSECT
-SELECT O.CustomerID
-FROM Orders AS O
-
-SELECT C.CustomerID
-FROM Customers AS C
 INNER JOIN Orders AS O
 ON O.CustomerID=C.CustomerID
 --B
@@ -107,23 +105,42 @@ WHERE O.OrderID IS NULL
 --8.	Dati pregled vanrednih prihoda osobe. Pregled treba da sadrži sljedeće kolone:
 --OsobaID, Ime, VanredniPrihodID, IznosPrihoda (Prihodi)
 USE Prihodi
-SELECT *
+SELECT O.OsobaID, O.Ime, VP.VanredniPrihodiID, VP.IznosVanrednogPrihoda
 FROM Osoba AS O 
+LEFT OUTER JOIN VanredniPrihodi AS VP -- prikazuje i osobe koje nemaju vanredni prihod 
+--ako hocemo da prikazemo samo osobe koje imaju vanredne prihode koristicemo INNER JOIN
+ON O.OsobaID=VP.OsobaID
 
---9.	Dati pregled redovnih prihoda svih osoba. Pregled treba da sadrži sljedeæe kolone: OsobaID, Ime, RedovniPrihodID, Neto (Prihodi)
-SELECT O.OsobaID,O.Ime,RP.RedovniPrihodiID,RP.Neto
+--Mozemo korisiti i RIGHT OUTER JOIN, samo bi tada zamijenili mjesta tabelama:
+SELECT O.OsobaID, O.Ime, VP.VanredniPrihodiID, VP.IznosVanrednogPrihoda
+FROM VanredniPrihodi AS VP
+RIGHT OUTER JOIN  Osoba AS O  --moguce ali nije preporucivo raditi na ovaj nacin jer idemo obrnutom hronologijom
+ON O.OsobaID=VP.OsobaID
+-- Ukoliko hocemo da prikazemo samo osobe koje imaju vanredni prihod
+SELECT O.OsobaID, O.Ime, VP.VanredniPrihodiID, VP.IznosVanrednogPrihoda
+FROM Osoba AS O 
+INNER JOIN VanredniPrihodi AS VP -- prikazuje samo osobe koje imaju vanredne prihode
+ON O.OsobaID=VP.OsobaID
+
+--Odredjivanje koja je lijeva, a koja desna tabela:
+--LIJEVA TABELA je ona tabela u kojoj nema spoljni kljuc, odnosno tabela čiji se primarni kljuc prostire u drugu tabelu
+--RIGHT JOIN koristimo kada želimo da nadjemo neke anomalije 
+
+
+--9.	Dati pregled redovnih prihoda osobe. Pregled treba da sadrži sljedeće kolone: OsobaID, Ime, RedovniPrihodID, Neto (Prihodi)
+SELECT O.OsobaID, O.Ime, O.RegijaID, RP.RedovniPrihodiID, RP.Neto
 FROM Osoba AS O
 LEFT OUTER JOIN RedovniPrihodi AS RP
-ON O.OsobaID=RP.OsobaID
-
---10.	Prikazati ukupnu vrijednost prihoda osobe (i redovne i vanredne). Rezultat sortirati u rastuæem redoslijedu prema ID osobe. (Prihodi)
-SELECT O.OsobaID,O.Ime,SUM(ISNULL(RP.Neto,0)+ISNULL(VP.IznosVanrednogPrihoda,0)) 'Ukupan iznos prihoda'
+ON RP.OsobaID=O.OsobaID
+--10.	Prikazati ukupnu vrijednost prihoda osobe (i redovne i vanredne). 
+--Rezultat sortirati u rastućem redoslijedu prema ID osobe. (Prihodi)
+SELECT O.OsobaID, SUM(ISNULL(RP.Neto,0)+ISNULL(VP.IznosVanrednogPrihoda,0))
 FROM Osoba AS O
-LEFT OUTER JOIN RedovniPrihodi AS RP
+LEFT OUTER JOIN RedovniPrihodi AS RP 
 ON O.OsobaID=RP.OsobaID
 LEFT OUTER JOIN VanredniPrihodi AS VP
 ON O.OsobaID=VP.OsobaID
-GROUP BY O.OsobaID,O.Ime
+GROUP BY O.OsobaID
 ORDER BY 1
 
 --11.	Odrediti da li je svaki autor napisao bar po jedan naslov. (Pubs)
