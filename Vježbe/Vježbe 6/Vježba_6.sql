@@ -76,6 +76,12 @@ FROM Orders AS O
 
 SELECT C.CustomerID
 FROM Customers AS C
+INTERSECT
+SELECT O.CustomerID
+FROM Orders AS O
+
+SELECT C.CustomerID
+FROM Customers AS C
 INNER JOIN Orders AS O
 ON O.CustomerID=C.CustomerID
 --B
@@ -103,12 +109,88 @@ WHERE O.OrderID IS NULL
 USE Prihodi
 SELECT *
 FROM Osoba AS O 
---9.	Dati pregled redovnih prihoda osobe. Pregled treba da sadrži sljedeće kolone: OsobaID, Ime, RedovniPrihodID, Neto (Prihodi)
---10.	Prikazati ukupnu vrijednost prihoda osobe (i redovne i vanredne). Rezultat sortirati u rastućem redoslijedu prema ID osobe. (Prihodi)
+
+--9.	Dati pregled redovnih prihoda svih osoba. Pregled treba da sadrži sljedeæe kolone: OsobaID, Ime, RedovniPrihodID, Neto (Prihodi)
+SELECT O.OsobaID,O.Ime,RP.RedovniPrihodiID,RP.Neto
+FROM Osoba AS O
+LEFT OUTER JOIN RedovniPrihodi AS RP
+ON O.OsobaID=RP.OsobaID
+
+--10.	Prikazati ukupnu vrijednost prihoda osobe (i redovne i vanredne). Rezultat sortirati u rastuæem redoslijedu prema ID osobe. (Prihodi)
+SELECT O.OsobaID,O.Ime,SUM(ISNULL(RP.Neto,0)+ISNULL(VP.IznosVanrednogPrihoda,0)) 'Ukupan iznos prihoda'
+FROM Osoba AS O
+LEFT OUTER JOIN RedovniPrihodi AS RP
+ON O.OsobaID=RP.OsobaID
+LEFT OUTER JOIN VanredniPrihodi AS VP
+ON O.OsobaID=VP.OsobaID
+GROUP BY O.OsobaID,O.Ime
+ORDER BY 1
+
 --11.	Odrediti da li je svaki autor napisao bar po jedan naslov. (Pubs)
 --a) ako ima autora koji nisu napisali ni jedan naslov navesti njihov ID.
 --b) dati pregled autora koji su napisali bar po jedan naslov.
---12.	Prikazati 10 najskupljih stavki prodaje. Upit treba da sadrži naziv proizvoda, količinu, cijenu i vrijednost stavke prodaje. Cijenu i vrijednost stavke prodaje zaokružiti na dvije decimale. Izlaz formatirati na način da uz količinu stoji 'kom' (npr 50kom) a uz cijenu KM (npr 50KM). (AdventureWorks2017)
---13.	Kreirati upit koji prikazuje ukupan broj kupaca po teritoriji. Lista treba da sadrži sljedeće kolone: naziv teritorije, ukupan broj kupaca. Uzeti u obzir samo teritorije gdje ima više od 1000 kupaca. (AdventureWorks2017)
---14.	Kreirati upit koji prikazuje zaradu od prodaje proizvoda. Lista treba da sadrži naziv proizvoda, ukupnu zaradu bez uračunatog popusta i ukupnu zaradu sa uračunatim popustom. Iznos zarade zaokružiti na dvije decimale. Uslov je da se prikaže zarada samo za stavke gdje je bilo popusta. Listu sortirati po zaradi opadajućim redoslijedom. (AdventureWorks2017)
+USE pubs
+SELECT A.au_id
+FROM authors AS A
+INTERSECT 
+SELECT TA.au_id
+FROM titleauthor AS TA
 
+SELECT*
+FROM authors
+
+-- OVIM VIDIMO DA SVI AUTORI NISU NAPISALI PO JEDAN NASLOV
+--A
+SELECT A.au_id 'Autori bez naslova'
+FROM authors AS A
+LEFT OUTER JOIN titleauthor AS TA
+ON A.au_id=TA.au_id
+WHERE TA.title_id IS NULL
+
+--ILI
+
+SELECT A.au_id 
+FROM authors AS A
+EXCEPT
+SELECT TA.au_id 
+FROM titleauthor AS TA
+
+--B 
+-- DISTINCT UKOLIKO ŽELIMO DA SE JEDAN AUTOR NE PONAVLJA VIŠE PUTA
+SELECT DISTINCT A.au_id 'Autori s naslovima'
+FROM authors AS A
+INNER JOIN titleauthor AS TA
+ON A.au_id=TA.au_id
+
+--ILI
+
+SELECT A.au_id
+FROM authors AS A
+INTERSECT
+SELECT TA.au_id
+FROM titleauthor AS TA
+
+--12.	Prikazati 10 najskupljih stavki prodaje. Upit treba da sadrži naziv proizvoda, kolièinu, cijenu i vrijednost stavke prodaje. Cijenu i vrijednost stavke prodaje zaokružiti na dvije decimale. Izlaz formatirati na naèin da uz kolièinu stoji 'kom' (npr 50kom) a uz cijenu KM (npr 50KM). (AdventureWorks2017)
+USE AdventureWorks2019
+SELECT TOP 10 PP.Name,CAST(SOD.OrderQty AS NVARCHAR)+' kom' 'Kolicina',CAST(ROUND(SOD.UnitPrice,2) AS NVARCHAR) +' KM' 'Cijena',ROUND((SOD.OrderQty*SOD.UnitPrice),2) 'Stavka prodaje'
+FROM Sales.SalesOrderDetail AS SOD
+INNER JOIN Production.Product AS PP
+ON SOD.ProductID=PP.ProductID
+ORDER BY 4 DESC
+
+--13.	Kreirati upit koji prikazuje ukupan broj kupaca po teritoriji. Lista treba da sadrži sljedeæe kolone: naziv teritorije, ukupan broj kupaca. Uzeti u obzir samo teritorije gdje ima više od 1000 kupaca. (AdventureWorks2017)
+SELECT ST.Name, COUNT(*) 'Broj kupaca'
+FROM Sales.Customer AS SC
+INNER JOIN SALES.SalesTerritory AS ST
+ON SC.TerritoryID=ST.TerritoryID
+GROUP BY St.Name
+HAVING COUNT(*)>1000
+
+--14.	Kreirati upit koji prikazuje zaradu od prodaje proizvoda. Lista treba da sadrži naziv proizvoda, ukupnu zaradu bez uraèunatog popusta i ukupnu zaradu sa uraèunatim popustom. Iznos zarade zaokružiti na dvije decimale. Uslov je da se prikaže zarada samo za stavke gdje je bilo popusta. Listu sortirati po zaradi opadajuæim redoslijedom. (AdventureWorks2017)
+SELECT PP.Name,ROUND(SUM(SOD.UnitPrice*SOD.OrderQty),2) 'Ukupna zarada bez popusta', ROUND(SUM(SOD.UnitPrice*SOD.OrderQty*(1-SOD.UnitPriceDiscount)),2) 'Ukupna zarada sa popustom'
+FROM Sales.SalesOrderDetail AS SOD
+INNER JOIN Production.Product AS PP
+ON PP.ProductID=SOD.ProductID
+WHERE SOD.UnitPriceDiscount>0
+GROUP BY PP.Name
+ORDER BY 3 DESC
