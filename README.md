@@ -22,7 +22,7 @@ _[Pubs](https://raw.githubusercontent.com/saranur/Baze-podataka-II/main/Materija
   
   [Vježbe 6](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba_6.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba%206.docx) [Baza Test](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vje%C5%BEbe%206/Vje%C5%BEba_6_baza_Test.sql)
   
-  [Vježbe 7]() ~ [Postavka]()
+  [Vježbe 7](https://github.com/saranur/Baze-podataka-II/blob/main/Vje%C5%BEbe/Vjezbe%207/Vje%C5%BEba%207.sql) ~ [Postavka](https://github.com/saranur/Baze-podataka-II/raw/main/Vje%C5%BEbe/Vjezbe%207/Vje%C5%BEba%207.pdf)
   
   [Vježbe 8]() ~ [Postavka]()
   
