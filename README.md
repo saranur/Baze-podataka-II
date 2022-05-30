@@ -26,6 +26,14 @@ _[Pubs](https://raw.githubusercontent.com/saranur/Baze-podataka-II/main/Materija
   
   [Vježbe 8]() ~ [Postavka]()
   
+  [Vježbe 9]() ~ [Postavka]()  
+  
+  [Vježbe 10]() ~ [Postavka]()
+  
+  [Vježbe 11]() ~ [Postavka]()
+  
+  [Vježbe 12]() ~ [Postavka]()
+  
 </details>
 <hr>
   
