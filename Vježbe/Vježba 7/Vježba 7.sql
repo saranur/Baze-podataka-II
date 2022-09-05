@@ -1,234 +1,236 @@
---Vjeûba 7 :: Zadaci
+Ôªø--Vje≈æba 7 :: Zadaci
 
---1.	a) Upotrebom podupita iz tabele Customers baze Northwind 
---dati prikaz svih polja tabele pri Ëemu je kupac iz Berlina.
---b) Upotrebom podupita iz tabele Customers baze Northwind dati prikaz svih polja tabele pri Ëemu je kupac iz Londona ili Berlina.
---A
-USE Northwind
+--1.	a) Upotrebom podupita iz tabele Customers baze Northwind dati prikaz svih polja tabele pri ƒçemu 
+--je kupac iz Berlina. 
 SELECT*
-FROM Customers AS C
-WHERE C.City LIKE (SELECT C.City
-				FROM Customers AS C
-				WHERE C.City='Berlin')
---B
+FROM Northwind.dbo.Customers AS C
+WHERE C.City=(SELECT C.City 
+			  FROM Northwind.dbo.Customers AS C
+			  WHERE C.City LIKE 'Berlin')
+--b) Upotrebom podupita iz tabele Customers baze Northwind dati prikaz svih polja tabele pri ƒçemu je 
+--kupac iz Londona ili Berlina. 
 SELECT*
-FROM Customers AS C
-WHERE C.City IN (SELECT C.City
-				FROM Customers AS C
-				WHERE C.City='Berlin' OR C.City='London')
---2.	
-USE AdventureWorks2017
+FROM Northwind.dbo.Customers AS C
+WHERE C.City IN (SELECT C.City 
+			   FROM Northwind.dbo.Customers AS C
+			   WHERE C.City LIKE 'Berlin' OR C.City LIKE 'London')
+--2.	Prikazati srednju vrijednost nabavljene koliƒçine, u obzir uzeti samo one zapise u kojima 
+--je vrijednost UnitPrice izmeƒëu 50 i 100 (ukljuƒçujuƒái graniƒçne vrijednosti). (AdventureWorks2017)
+SELECT AVG(POD.OrderQty) AS 'Srednja vrijednost'
+FROM AdventureWorks2019.Purchasing.PurchaseOrderDetail AS POD
+WHERE POD.UnitPrice BETWEEN 50 AND 100
 
-SELECT AVG(PP.OrderQty) 'Srednja vrijednost naruËene koliËine'
-FROM Purchasing.PurchaseOrderDetail AS PP
-WHERE PP.UnitPrice BETWEEN 50 AND 100
 
-SELECT AVG(PodQ.OrderQty) 'Srednja vrijednost naruËene koliËine'
-FROM (SELECT PP.OrderQty
-	  FROM Purchasing.PurchaseOrderDetail AS PP
-	  WHERE PP.UnitPrice BETWEEN 50 AND 100) AS PodQ
-
---3.Prikazati ID narudûbe(i) u kojima je naruËena koliËina jednaka minimalnoj, odnosno, maksimalnoj vrijednosti svih naruËenih koliËina. (Northwind)	
-USE Northwind
-
-SELECT MIN(OD.Quantity) 'MIN', MAX(OD.Quantity)'MAX'
-FROM [Order Details] AS OD
---MIN 1
---MAX 130
---NA»IN 1
-SELECT DISTINCT OD.OrderID, OD.Quantity
-FROM [Order Details] AS OD 
+--3.	Prikazati ID narud≈æbe(i) u kojima je naruƒçena koliƒçina jednaka minimalnoj, 
+--odnosno, maksimalnoj vrijednosti svih naruƒçenih koliƒçina. (Northwind)
+SELECT OD.OrderID
+FROM Northwind.dbo.[Order Details] AS OD
 WHERE OD.Quantity=(SELECT MIN(OD.Quantity) 
-					FROM [Order Details] AS OD) OR OD.Quantity=(SELECT MAX(OD.Quantity) 
-																FROM [Order Details] AS OD)
---NA»IN 2
-SELECT OD.OrderID, OD.Quantity
-FROM [Order Details] AS OD 
-WHERE OD.Quantity=(SELECT MIN(OD.Quantity) 
-					FROM [Order Details] AS OD)
-UNION
-SELECT OD.OrderID, OD.Quantity
-FROM [Order Details] AS OD 
-WHERE OD.Quantity=(SELECT MAX(OD.Quantity) 
-					FROM [Order Details] AS OD)
-
---4.	Prikazati  ID narudûbe i ID kupca koji je kupio viöe od 10 komada proizvoda Ëiji je ID 15. (Northwind)
-SELECT O.OrderID,O.CustomerID
-FROM Orders as O
-WHERE (  SELECT Quantity 
-		FROM [Order Details] AS OD        
-		WHERE O.OrderID=OD.OrderID AND OD.ProductID=15)>10
-
-USE Northwind
-SELECT O.OrderID,O.CustomerID, OD.Quantity
-FROM Orders AS O
-INNER JOIN [Order Details] AS OD
+				   FROM Northwind.dbo.[Order Details] AS OD) OR OD.Quantity=(SELECT MAX(OD.Quantity)
+																			 FROM Northwind.dbo.[Order Details] AS OD)
+--4.	Prikazati  ID narud≈æbe i ID kupca koji je kupio vi≈°e od 10 komada proizvoda ƒçiji je ID 15.
+--(Northwind)
+SELECT O.OrderID, O.CustomerID, OD.Quantity
+FROM Northwind.dbo.Orders AS O
+INNER JOIN Northwind.dbo.[Order Details] AS OD
 ON O.OrderID=OD.OrderID
-WHERE  OD.ProductID=15 AND OD.Quantity>10
+WHERE OD.Quantity>10 AND OD.ProductID=15
+
+--DRUGI NACIN
+SELECT O.OrderID, O.CustomerID
+FROM Northwind.dbo.Orders AS O
+WHERE (SELECT OD.Quantity
+	   FROM Northwind.dbo.[Order Details] AS OD
+	   WHERE OD.OrderID=O.OrderID AND OD.ProductID=15)>10
+	   --Ovo je korelacijski tip podupita 
 
 --5.	Prikazati sve osobe koje nemaju prihode, vanredni i redovni. (Prihodi) 
-USE prihodi
-SELECT O.OsobaID, o.Ime
-FROM Osoba AS O
-WHERE NOT EXISTS  (SELECT VP.OsobaID
-				   FROM VanredniPrihodi AS VP
-					WHERE VP.OsobaID=O.OsobaID) AND NOT EXISTS (SELECT RP.OsobaID
-																FROM RedovniPrihodi AS RP
-																WHERE RP.OsobaID=O.OsobaID)
+SELECT*
+FROM prihodi.dbo.Osoba AS O
+WHERE NOT EXISTS (SELECT RP.OsobaID
+				  FROM prihodi.dbo.RedovniPrihodi AS RP
+				  WHERE RP.OsobaID=O.OsobaID) AND NOT EXISTS(SELECT VP.OsobaID
+															 FROM prihodi.dbo.VanredniPrihodi AS VP
+															 WHERE VP.OsobaID=O.OsobaID)
 
-SELECT O.OsobaID
-FROM Osoba AS O
-LEFT JOIN VanredniPrihodi AS VP
-ON VP.OsobaID=O.OsobaID
-WHERE VP.OsobaID IS NULL
-INTERSECT
-SELECT O.OsobaID
-FROM Osoba AS O
-LEFT JOIN RedovniPrihodi AS RP
-ON RP.OsobaID=O.OsobaID
-WHERE RP.OsobaID IS NULL
+--6.	Dati prikaz ID narud≈æbe, ID proizvoda i jediniƒçne cijene, te razliku cijene u odnosu 
+--na srednju vrijednost cijene za sve stavke. Rezultat sortirati prema vrijednosti razlike u
+--rastuƒáem redoslijedu.  (Northwind)
+SELECT OD.OrderID, OD.ProductID, OD.UnitPrice, (SELECT AVG(OD.UnitPrice)
+												FROM Northwind.dbo.[Order Details] AS OD) AS 'Srednja vrijednost', 
+												OD.UnitPrice-(SELECT AVG(OD.UnitPrice)
+												FROM Northwind.dbo.[Order Details] AS OD) AS Razlika
+FROM Northwind.dbo.[Order Details] AS OD
+ORDER BY 5 ASC 
 
---6.	Dati prikaz ID narudûbe, ID proizvoda i jediniËne cijene, te razliku cijene u odnosu na srednju vrijednost cijene za sve stavke. Rezultat sortirati prema vrijednosti razlike u rastuÊem redoslijedu.  (Northwind)
-SELECT OD.OrderID,OD.ProductID,OD.UnitPrice, (SELECT AVG(OD.UnitPrice)
-												FROM [Order Details] AS OD) 'Srednja vrijednost', OD.UnitPrice-(SELECT AVG(OD.UnitPrice)
-												FROM [Order Details] AS OD) 'Razlika'
-FROM [Order Details] AS OD
-ORDER BY 5 
-
---7.	Za sve proizvode kojih ima na stanju dati prikaz ID proizvoda, naziv proizvoda i stanje zaliha, te razliku stanja zaliha proizvoda u odnosu na srednju vrijednost stanja za sve proizvode u tabeli. Rezultat sortirati prema vrijednosti razlike u opadajuÊem redoslijedu. (Northwind)
-SELECT P.ProductID,P.ProductName,P.UnitsInStock, P.UnitsInStock -(SELECT AVG(P.UnitsInStock)
-																	FROM Products AS P)
-FROM Products AS P
+--7.	Za sve proizvode kojih ima na stanju dati prikaz ID proizvoda, naziv proizvoda i stanje zaliha,
+--te razliku stanja zaliha proizvoda u odnosu na srednju vrijednost stanja za sve proizvode u tabeli. 
+--Rezultat sortirati prema vrijednosti razlike u opadajuƒáem redoslijedu. (Northwind)
+SELECT P.ProductID, P.ProductName, P.UnitsInStock, (SELECT AVG(P.UnitsInStock)
+												    FROM Northwind.dbo.Products AS P) AS 'Srednja vrijednost zaliha', 
+													P.UnitsInStock- (SELECT AVG(P.UnitsInStock)
+												    FROM Northwind.dbo.Products AS P) AS Razlika
+FROM Northwind.dbo.Products AS P
 WHERE P.UnitsInStock>0
-
---8.	Prikazati po 5 najstarijih zaposlenika muökog, odnosno, ûenskog spola uz navoenje sljedeÊih podataka: radno mjesto na kojem se nalazi, datum roenja, korisnicko ime i godine starosti. KorisniËko ime je dio podatka u LoginID. Rezultate sortirati prema polu rastuÊim, a zatim prema godinama starosti opadajuÊim redoslijedom. (AdventureWorks2017)
-USE AdventureWorks2017
-SELECT F.JobTitle,F.BirthDate,F.Gender,F.[Korisnicko ime],F.[Godine starosti]
-FROM(SELECT TOP 5 E.JobTitle,E.BirthDate,E.Gender,SUBSTRING(LoginID, CHARINDEX('\',LoginID) + 1, 
-			LEN(LoginID) - CHARINDEX('\',LoginID) - 1)'Korisnicko ime',DATEDIFF(YEAR,E.BirthDate,GETDATE()) 'Godine starosti'
-FROM HumanResources.Employee AS E
+ORDER BY 5 DESC
+--8.	Prikazati po 5 najstarijih zaposlenika mu≈°kog, odnosno, ≈æenskog pola uz navoƒëenje sljedeƒáih
+--podataka: radno mjesto na kojem se nalazi, datum roƒëenja, korisnicko ime i godine starosti.
+--Korisniƒçko ime je dio podatka u LoginID. Rezultate sortirati prema polu rastuƒáim, 
+--a zatim prema godinama starosti opadajuƒáim redoslijedom. (AdventureWorks2017)
+SELECT F.JobTitle, F.BirthDate, F.Gender, F.[Korisnicko ime], F.[Godine starosti]
+FROM(SELECT TOP 5 E.JobTitle, E.BirthDate, E.Gender,
+SUBSTRING(E.LoginID, CHARINDEX('\', E.LoginID)+1, (LEN(E.LoginID)-CHARINDEX('\', E.LoginID))-1) AS 'Korisnicko ime',
+DATEDIFF(YEAR, E.BirthDate, GETDATE()) AS 'Godine starosti'
+FROM AdventureWorks2019.HumanResources.Employee AS E
 WHERE E.Gender='F'
-ORDER BY 5 DESC
-) AS F
+ORDER BY 5 DESC) AS F
 UNION
-SELECT M.JobTitle,M.BirthDate,M.Gender,M.[Korisnicko ime],M.[Godine starosti]
-FROM(SELECT TOP 5 E.JobTitle,E.BirthDate,E.Gender,SUBSTRING(LoginID, CHARINDEX('\',LoginID) + 1, 
-			LEN(LoginID) - CHARINDEX('\',LoginID) - 1)'Korisnicko ime',DATEDIFF(YEAR,E.BirthDate,GETDATE()) 'Godine starosti'
-FROM HumanResources.Employee AS E
+SELECT M.JobTitle, M.BirthDate, M.Gender,  M.[Korisnicko ime], M.[Godine starosti]
+FROM(SELECT TOP 5 E.JobTitle, E.BirthDate, E.Gender,
+SUBSTRING(E.LoginID, CHARINDEX('\', E.LoginID)+1, (LEN(E.LoginID)-CHARINDEX('\', E.LoginID))-1) AS 'Korisnicko ime',
+DATEDIFF(YEAR, E.BirthDate, GETDATE()) AS 'Godine starosti'
+FROM AdventureWorks2019.HumanResources.Employee AS E
 WHERE E.Gender='M'
-ORDER BY 5 DESC
-) AS M
-ORDER BY F.Gender,[Godine starosti] DESC
+ORDER BY 5 DESC) AS M
+ORDER BY F.Gender, [Godine starosti] DESC
+--s obzirom na to da kada koristimo UNION mozemo imati samo jedan order BY, a mi trebamo da sortiramo i imamo ORDER BY
+--i za muskarce i za zene, stavimo sve u podupit 
 
---9.	Prikazati po 3 zaposlenika koji obavljaju poslove managera uz navoenje sljedeÊih podataka: radno mjesto na kojem se nalazi, datum zaposlenja, braËni status i staû. Ako osoba nije u braku plaÊa dodatni porez (upitom naglasiti to), inaËe ne plaÊa. Rezultate sortirati prema braËnom statusu rastuÊim, a zatim prema staûu opadajuÊim redoslijedom. (AdventureWorks2017)
-SELECT TOP 3 E.JobTitle,E.HireDate,E.MaritalStatus,DATEDIFF(YEAR, E.HireDate,GETDATE()) 'Godine staza', 'Placa dodatni porez' Porez
-FROM HumanResources.Employee AS E
-WHERE E.JobTitle LIKE '%manager%' AND E.MaritalStatus ='S'
+--Kada nam jedan upit postaje izvor podataka drugom podupitu, moramo mu dati neki alias
+
+--9.	Prikazati po 3 zaposlenika koji obavljaju poslove managera uz navoƒëenje sljedeƒáih podataka: 
+--radno mjesto na kojem se nalazi, datum zaposlenja, braƒçni status i sta≈æ. 
+--Ako osoba nije u braku plaƒáa dodatni porez (upitom naglasiti to), inaƒçe ne plaƒáa.
+--Rezultate sortirati prema braƒçnom statusu rastuƒáim, a zatim prema sta≈æu opadajuƒáim redoslijedom.(AdventureWorks2017)
+SELECT TOP 3 E.JobTitle, E.HireDate, E.MaritalStatus, DATEDIFF(YEAR, E.HireDate, GETDATE()) AS 'Staz', 'Placa dodatni porez' Porez
+FROM AdventureWorks2019.HumanResources.Employee AS E
+WHERE E.JobTitle LIKE '%manager%' AND E.MaritalStatus='S'
+UNION 
+SELECT TOP 3 E.JobTitle, E.HireDate, E.MaritalStatus, DATEDIFF(YEAR, E.HireDate, GETDATE()) AS 'Staz', '' Porez
+FROM AdventureWorks2019.HumanResources.Employee AS E
+WHERE E.JobTitle LIKE '%manager%' AND E.MaritalStatus='M'
+ORDER BY 3, 4 DESC
+
+--10.	Prikazati po 5 osoba koje se nalaze na 1, odnosno, 4.  organizacionom nivou, 
+--uposlenici su i ≈æele primati email ponude od AdventureWorksa uz navoƒëenje sljedeƒáih polja:
+--ime i prezime osobe kao jedinstveno polje, organizacijski nivo na kojem se nalazi i da 
+--li prima email promocije. Pored ovih uvesti i polje koje ƒáe sadr≈æavati poruke: 
+--Ne prima (0), Prima selektirane (1) i Prima (2). 
+--Sadr≈æaj novog polja ovisi o vrijednosti polja EmailPromotion. 
+--Rezultat sortirati prema organizacijskom nivou i dodatno uvedenom polju. (AdventureWorks2017)
+
+SELECT TOP 5 CONCAT(PP.FirstName,' ', PP.MiddleName, ' ', PP.LastName) AS 'Ime i prezime', E.OrganizationLevel, PP.EmailPromotion, 'Ne prima' 'Email promocije'
+FROM AdventureWorks2019.Person.Person AS PP
+INNER JOIN AdventureWorks2019.HumanResources.Employee AS E
+ON PP.BusinessEntityID=E.BusinessEntityID
+WHERE(E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=0
 UNION
-SELECT TOP 3 E.JobTitle,E.HireDate,E.MaritalStatus,DATEDIFF(YEAR, E.HireDate,GETDATE()) 'Godine staza', ' ' Porez
-FROM HumanResources.Employee AS E
-WHERE E.JobTitle LIKE '%manager%' AND E.MaritalStatus ='M'
-ORDER BY 3, [Godine staza] DESC
-
-
---10.	Prikazati po 5 osoba koje se nalaze na 1, odnosno, 4.  organizacionom nivou, uposlenici su i ûele primati email ponude od AdventureWorksa uz navoenje sljedeÊih polja: ime i prezime osobe kao jedinstveno polje, organizacijski nivo na kojem se nalazi i da li prima email promocije. Pored ovih uvesti i polje koje Êe sadrûavati poruke: Ne prima (0), Prima selektirane (1) i Prima (2). Sadrûaj novog polja ovisi o vrijednosti polja EmailPromotion. Rezultat sortirati prema organizacijskom nivou i dodatno uvedenom polju. (AdventureWorks2017)
-SELECT TOP 5 PP.FirstName +' ' +PP.LastName 'Ime i prezime', E.OrganizationLevel,PP.EmailPromotion, 'Ne prima' Prima
-FROM HumanResources.Employee AS E
-INNER JOIN Person.Person AS PP
-ON E.BusinessEntityID=PP.BusinessEntityID
-WHERE (E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=0
-UNION 
-SELECT TOP 5 PP.FirstName +' ' +PP.LastName 'Ime i prezime', E.OrganizationLevel,PP.EmailPromotion, 'Prima selektirane' Prima
-FROM HumanResources.Employee AS E
-INNER JOIN Person.Person AS PP
-ON E.BusinessEntityID=PP.BusinessEntityID
-WHERE (E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=1
-UNION 
-SELECT TOP 5 PP.FirstName +' ' +PP.LastName 'Ime i prezime', E.OrganizationLevel,PP.EmailPromotion, 'Prima email promocije' Prima
-FROM HumanResources.Employee AS E
-INNER JOIN Person.Person AS PP
-ON E.BusinessEntityID=PP.BusinessEntityID
-WHERE (E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=2
-ORDER BY 2 ,4 
-
---11.	Prikazati broj narudûbe, datum narudûbe i datum isporuke za narudûbe koje su isporuËene u Kanadu u 7. mjesecu 2014. godine. Uzeti u obzir samo narudûbe koje nisu plaÊene kreditnom karticom. Datume formatirati u sljedeÊem obliku: dd.mm.yyyy. (AdventureWorks2017)
-SELECT SOH.SalesOrderID, FORMAT(SOH.OrderDate,'dd.MM.yyyy') 'Order date', SOH.ShipDate
-FROM Sales.SalesOrderHeader AS SOH
-INNER JOIN Sales.SalesOrderDetail AS SOD
-ON SOH.SalesOrderID=SOD.SalesOrderID
-INNER JOIN Sales.SalesTerritory AS ST
-ON ST.TerritoryID=SOH.TerritoryID
-WHERE ST.Name LIKE 'Canada' AND YEAR(SOH.ShipDate)=2014 AND MONTH(SOH.ShipDate)=7 AND SOH.CreditCardID IS NULL
-
---12.	Kreirati upit koji prikazuje minimalnu, maksimalnu, prosjeËnu te ukupnu zaradu po mjesecima u 2013. godini. (AdventureWorks2017)
-SELECT MONTH(SOH.OrderDate) 'Mjesec',AVG(SOD.LineTotal) 'Prosjek', MIN(SOD.LineTotal) 'Minimalna', MAX(SOD.LineTotal) 'Maksimalna'
-FROM Sales.SalesOrderDetail AS SOD
-INNER JOIN Sales.SalesOrderHeader AS SOH
+SELECT TOP 5 CONCAT(PP.FirstName,' ', PP.MiddleName, ' ', PP.LastName) AS 'Ime i prezime', E.OrganizationLevel, PP.EmailPromotion, 'Prima selektirane' 'Email promocije'
+FROM AdventureWorks2019.Person.Person AS PP
+INNER JOIN AdventureWorks2019.HumanResources.Employee AS E
+ON PP.BusinessEntityID=E.BusinessEntityID
+WHERE(E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=1
+UNION
+SELECT TOP 5 CONCAT(PP.FirstName,' ', PP.MiddleName, ' ', PP.LastName) AS 'Ime i prezime', E.OrganizationLevel,PP.EmailPromotion,  'Prima' 'Email promocije'
+FROM AdventureWorks2019.Person.Person AS PP
+INNER JOIN AdventureWorks2019.HumanResources.Employee AS E
+ON PP.BusinessEntityID=E.BusinessEntityID
+WHERE(E.OrganizationLevel=1 OR E.OrganizationLevel=4) AND PP.EmailPromotion=2
+ORDER BY 2,4
+--11.	Prikazati broj narud≈æbe, datum narud≈æbe i datum isporuke za narud≈æbe koje su isporuƒçene u
+--Kanadu u 7. mjesecu 2014. godine. Uzeti u obzir samo narud≈æbe koje nisu plaƒáene kreditnom karticom. 
+--Datume formatirati u sljedeƒáem obliku: dd.mm.yyyy. (AdventureWorks2017)
+SELECT SOH.SalesOrderID, FORMAT(SOH.OrderDate, 'dd.mm.yyyy') 'Datum narudzbe', FORMAT(SOH.ShipDate, 'dd.mm.yyyy') 'Datum isporuke'
+FROM AdventureWorks2019.Sales.SalesOrderHeader AS SOH
+INNER JOIN AdventureWorks2019.Sales.SalesTerritory AS SST
+ON SOH.TerritoryID=SST.TerritoryID
+WHERE SOH.CreditCardID IS NULL AND YEAR(SOH.ShipDate)=2014 AND MONTH(SOH.ShipDate)=7 AND SST.CountryRegionCode='CA'
+--12.	Kreirati upit koji prikazuje minimalnu, maksimalnu, prosjeƒçnu te ukupnu zaradu po mjesecima
+--u 2013. godini. (AdventureWorks2017)
+SELECT MONTH(SOH.OrderDate)'Mjesec', MIN(SOD.LineTotal) 'Minimalna zarada', MAX(SOD.LineTotal) 'Maksimalna zarada',
+AVG(SOD.LineTotal) 'Prosjecna zarada'
+FROM AdventureWorks2019.Sales.SalesOrderDetail AS SOD
+INNER JOIN AdventureWorks2019.Sales.SalesOrderHeader AS SOH
 ON SOD.SalesOrderID=SOH.SalesOrderID
 WHERE YEAR(SOH.OrderDate)=2013
-GROUP BY MONTH(SOH.OrderDate)
+GROUP BY MONTH(SOH.OrderDate) 
 ORDER BY 1
 
-SELECT MONTH(SOH.OrderDate) 'Mjesec',AVG(SOD.UnitPrice*SOD.OrderQty) 'Prosjek', MIN(SOD.UnitPrice*SOD.OrderQty) 'Minimalna', MAX(SOD.UnitPrice*SOD.OrderQty) 'Maksimalna'
-FROM Sales.SalesOrderDetail AS SOD
-INNER JOIN Sales.SalesOrderHeader AS SOH
-ON SOD.SalesOrderID=SOH.SalesOrderID
-WHERE YEAR(SOH.OrderDate)=2013
-GROUP BY MONTH(SOH.OrderDate)
-ORDER BY 1
-
---13.	Kreirati upit koji prikazuje ime i prezime, korisniËko ime (sve iza znaka Ñ\ì u koloni LoginID), duûinu korisniËkog imena, titulu, datum zaposlenja (dd.mm.yyyy), starost i staû zaposlenika. Uslov je da se prikaûe 10 najstarijih zaposlenika koji obavljaju bilo koju ulogu menadûera. (AdventureWorks2017)
-SELECT TOP 10 PP.FirstName+ ' '+PP.LastName 'Ime i prezime', RIGHT(E.LoginID, CHARINDEX('\',REVERSE(E.LoginID))-1) 'KorisniËko ime', LEN(RIGHT(E.LoginID, CHARINDEX('\',REVERSE(E.LoginID))-1)) 'Duûina korisniËkog imena', E.JobTitle, FORMAT(E.HireDate,'dd.MM.yyyy') 'Datum zaposlenja', DATEDIFF(YEAR,E.BirthDate,GETDATE()) 'Starost', DATEDIFF(YEAR, E.HireDate,GETDATE()) 'Staû'
-FROM Person.Person AS PP
-INNER JOIN HumanResources.Employee AS E
+--13.	Kreirati upit koji prikazuje ime i prezime, korisniƒçko ime (sve iza znaka ‚Äû\‚Äú u koloni
+--LoginID), du≈æinu korisniƒçkog imena, titulu, datum zaposlenja (dd.mm.yyyy), starost i sta≈æ zaposlenika.
+--Uslov je da se prika≈æe 10 najstarijih zaposlenika koji obavljaju bilo koju ulogu menad≈æera.
+--(AdventureWorks2017)
+SELECT TOP 10 CONCAT(PP.FirstName,' ', PP.MiddleName,' ', PP.LastName) 'Ime i prezime', 
+SUBSTRING(E.LoginID, CHARINDEX('\', E.LoginID)+1, LEN(E.LoginID)-CHARINDEX('\', E.LoginID)) 'Korisnicko ime', 
+LEN(SUBSTRING(E.LoginID, CHARINDEX('\', E.LoginID)+1, LEN(E.LoginID)-CHARINDEX('\', E.LoginID))) 'Duzina korisnickog imena', 
+E.JobTitle, FORMAT(E.HireDate, 'dd.mm.yyyy') 'Datum zaposlenja', DATEDIFF(YEAR, E.BirthDate, GETDATE())	Startost, 
+DATEDIFF(YEAR, E.HireDate, GETDATE()) Staz
+FROM AdventureWorks2019.HumanResources.Employee AS E
+INNER JOIN AdventureWorks2019.Person.Person AS PP
 ON E.BusinessEntityID=PP.BusinessEntityID
-WHERE E.JobTitle LIKE '%Manager%'
-ORDER BY Starost DESC
+WHERE E.JobTitle LIKE '%manager%'
+ORDER BY 5 DESC
 
---14.	Kreirati upit koji prikazuje 10 najskupljih stavki prodaje (detalji narudûbe) i to sljedeÊe kolone: naziv proizvoda, koliËina, cijena, iznos. Cijenu i iznos zaokruûiti na dvije decimale. Takoer, koliËinu prikazati u formatu Ñ10 kom.ì, a cijenu i iznos u formatu Ñ1000 KMì. (AdventureWorks2017)
-SELECT PP.Name,SOD.OrderQty,CAST(SOD.UnitPrice AS VARCHAR) +' kom' 'Kolicina',CAST(SUM(SOD.UnitPrice*SOD.OrderQty) AS VARCHAR) +' KM' 'Iznos'
-FROM Sales.SalesOrderDetail AS SOD
-INNER JOIN Production.Product AS PP
+
+--14.	Kreirati upit koji prikazuje 10 najskupljih stavki prodaje (detalji narud≈æbe) i to
+--sljedeƒáe kolone: naziv proizvoda, koliƒçina, cijena, iznos. Cijenu i iznos zaokru≈æiti na dvije decimale.
+--Takoƒëer, koliƒçinu prikazati u formatu ‚Äû10 kom.‚Äú, a cijenu i iznos u formatu ‚Äû1000 KM‚Äú.(AdventureWorks2017)
+
+SELECT TOP 10 PP.Name AS 'Naziv proizvoda', CAST(SOD.OrderQty AS NVARCHAR)+' kom' AS Kolicina, CAST(ROUND(SOD.UnitPrice,2)AS NVARCHAR)+' KM' AS Cijena, CAST(ROUND(SOD.UnitPrice*SOD.OrderQty,2)AS NVARCHAR)+' KM' AS Iznos
+FROM AdventureWorks2019.Sales.SalesOrderDetail AS SOD
+INNER JOIN AdventureWorks2019.Production.Product AS PP
 ON SOD.ProductID=PP.ProductID
-GROUP BY PP.Name,SOD.OrderQty,SOD.UnitPrice
 ORDER BY 4 DESC
 
---15.	Kreirati upit koji prikazuje naziv modela i opis modela proizvoda. Uslov je da naziv modela sadrûi rijeË ÑMountainì, dok je opis potrebno prikazati samo na engleskom jeziku. (AdventureWorks2017)
-SELECT PM.Name,PD.Description
-FROM Production.ProductModel AS PM
-INNER JOIN Production.ProductModelProductDescriptionCulture AS PMPDC
-ON PM.ProductModelID=PMPDC.ProductModelID
-INNER JOIN Production.ProductDescription AS PD
+--15.	Kreirati upit koji prikazuje naziv modela i opis modela proizvoda. 
+--Uslov je da naziv modela sadr≈æi rijeƒç ‚ÄûMountain‚Äú, dok je opis potrebno prikazati samo na
+--engleskom jeziku. (AdventureWorks2017)
+SELECT PPM.Name, PD.Description
+FROM AdventureWorks2019.Production.ProductModel AS PPM
+INNER JOIN AdventureWorks2019.Production.ProductModelProductDescriptionCulture AS PMPDC
+ON PMPDC.ProductModelID=PPM.ProductModelID
+INNER JOIN AdventureWorks2019.Production.ProductDescription AS PD
 ON PD.ProductDescriptionID=PMPDC.ProductDescriptionID
-INNER JOIN Production.Culture AS C
-ON C.CultureID=PMPDC.CultureID
-WHERE C.Name LIKE 'English' AND PM.Name LIKE '%Mountain%'
+INNER JOIN AdventureWorks2019.Production.Culture AS C
+ON PMPDC.CultureID=C.CultureID
+WHERE C.Name LIKE 'English' AND PPM.Name LIKE '%Mountain%'
 
---16.	Kreirati upit koji prikazuje broj, naziv i cijenu proizvoda, te stanje zaliha po lokacijama. Uzeti u obzir samo proizvode koji pripadaju kategoriji ÑBikesì. Izlaz sortirati po stanju zaliha u opadajuÊem redoslijedu. (AdventureWorks2017)
-SELECT PP.ProductNumber,PP.Name,PP.ListPrice,PL.Name,SUM(PI.Quantity) 'Stanje zaliha'
-FROM Production.Product AS PP
-INNER JOIN Production.ProductInventory AS PI
-ON PP.ProductID=PI.ProductID
-INNER JOIN Production.Location AS PL
-ON PI.LocationID=PL.LocationID
-GROUP BY PP.ProductNumber,PP.Name,PP.ListPrice,PL.Name
+--16.	Kreirati upit koji prikazuje broj, naziv i cijenu proizvoda, te stanje zaliha po lokacijama. 
+--Uzeti u obzir samo proizvode koji pripadaju kategoriji ‚ÄûBikes‚Äú. Izlaz sortirati po stanju zaliha u
+--opadajuƒáem redoslijedu. (AdventureWorks2017)
+SELECT PP.ProductNumber, PP.Name, PP.ListPrice, PL.Name AS Lokacija,  SUM(PPI.Quantity) AS 'Stanje zaliha'
+FROM AdventureWorks2019.Production.Product AS PP
+INNER JOIN AdventureWorks2019.Production.ProductSubcategory AS PPS
+ON PPS.ProductSubcategoryID=PP.ProductSubcategoryID	
+INNER JOIN AdventureWorks2019.Production.ProductCategory AS PC
+ON PPS.ProductCategoryID=PC.ProductCategoryID
+INNER JOIN AdventureWorks2019.Production.ProductInventory AS PPI
+ON PP.ProductID=PPI.ProductID
+INNER JOIN AdventureWorks2019.Production.Location AS PL
+ON PPI.LocationID=PL.LocationID
+WHERE PC.Name LIKE '%bikes%'
+GROUP BY PP.ProductNumber, PP.Name, PP.ListPrice, PL.Name
 ORDER BY 5 DESC
 
---17.	Kreirati upit koji prikazuje ukupno ostvarenu zaradu po zaposleniku, za robu isporuËenu na podruËje Evrope, u januaru mjesecu 2014. godine. Lista treba da sadrûi ime i prezime zaposlenika, datum zaposlenja (dd.mm.yyyy), mail adresu, te ukupnu ostvarenu zaradu zaokruûenu na dvije decimale. Izlaz sortirati po zaradi u opadajuÊem redoslijedu. (AdventureWorks2017)   
-SELECT PP.FirstName + ' '+ PP.LastName 'Ime i prezime zaposlenika', FORMAT(E.HireDate,'dd.MM.yyyy') 'Datum zaposlenja',E.HireDate,EA.EmailAddress,SUM(SOD.UnitPrice*SOD.OrderQty)'Ukupna zarada'
-FROM HumanResources.Employee AS E
-INNER JOIN Person.Person AS PP
+--17.	Kreirati upit koji prikazuje ukupno ostvarenu zaradu po zaposleniku, na podruƒçju Evrope,
+--u januaru mjesecu 2014. godine. Lista treba da sadr≈æi ime i prezime zaposlenika, datum zaposlenja 
+--(dd.mm.yyyy), mail adresu, te ukupnu ostvarenu zaradu zaokru≈æenu na dvije decimale.
+--Izlaz sortirati po zaradi u opadajuƒáem redoslijedu. (AdventureWorks2017)  
+SELECT CONCAT(PP.FirstName,' ', PP.MiddleName, ' ', PP.LastName) AS 'Ime i prezime',
+FORMAT(E.HireDate, 'dd.mm.yyyy') AS 'Datum zaposlenja', PEA.EmailAddress, ROUND(SUM(SOD.UnitPrice*SOD.OrderQty),2) AS Zarada
+FROM AdventureWorks2019.HumanResources.Employee AS E
+INNER JOIN AdventureWorks2019.Person.Person AS PP
 ON E.BusinessEntityID=PP.BusinessEntityID
-INNER JOIN Person.EmailAddress AS EA
-ON PP.BusinessEntityID=EA.BusinessEntityID
-INNER JOIN Sales.SalesPerson AS SP
-ON E.BusinessEntityID=SP.BusinessEntityID
-INNER JOIN Sales.SalesOrderHeader AS SOH
-ON SOH.SalesPersonID=SP.BusinessEntityID
-INNER JOIN Sales.SalesOrderDetail AS SOD
-ON SOD.SalesOrderID=SOH.SalesOrderID
-INNER JOIN Sales.SalesTerritory AS ST
-ON SOH.TerritoryID=ST.TerritoryID
-WHERE ST.[Group]='Europe' AND YEAR(SOH.OrderDate)=2014 AND MONTH(SOH.OrderDate)=1
-GROUP BY PP.FirstName + ' '+ PP.LastName,FORMAT(E.HireDate,'dd.MM.yyyy'),E.HireDate,EA.EmailAddress
-ORDER BY [Ukupna zarada] DESC
+INNER JOIN AdventureWorks2019.Person.EmailAddress AS PEA
+ON PEA.BusinessEntityID=PP.BusinessEntityID
+INNER JOIN AdventureWorks2019.Sales.SalesPerson AS SSP
+ON E.BusinessEntityID=SSP.BusinessEntityID
+INNER JOIN AdventureWorks2019.Sales.SalesOrderHeader AS SOH
+ON SSP.BusinessEntityID= SOH.SalesPersonID
+INNER JOIN AdventureWorks2019.Sales.SalesOrderDetail AS SOD
+ON SOH.SalesOrderID=SOD.SalesOrderID
+INNER JOIN AdventureWorks2019.Sales.SalesTerritory AS SST
+ON SST.TerritoryID=SOH.TerritoryID
+WHERE SST.[Group] LIKE '%Europe%' AND YEAR(SOH.OrderDate)=2014 AND MONTH(SOH.OrderDate)=1
+GROUP BY CONCAT(PP.FirstName,' ', PP.MiddleName, ' ', PP.LastName), E.HireDate, PEA.EmailAddress
+ORDER BY 4 DESC
