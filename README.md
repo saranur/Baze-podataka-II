@@ -42,7 +42,7 @@ _[Pubs](https://raw.githubusercontent.com/saranur/Baze-podataka-II/main/Materija
  <details>
  <summary>Ispiti</summary><br>
  
- [Ispit](link)
+ [Ispit 29.06.2022](https://github.com/saranur/Baze-podataka-II/blob/main/Ispiti/prakticni_ispit%2029JUN22.sql)
  </details>
  <hr>
 
